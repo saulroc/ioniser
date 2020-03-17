@@ -1,5 +1,7 @@
 {
   "name": "ioniser",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

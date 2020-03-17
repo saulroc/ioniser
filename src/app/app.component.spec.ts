@@ -50,7 +50,7 @@ describe('AppComponent', () => {
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-label');
     expect(menuItems.length).toEqual(12);
-    expect(menuItems[0].textContent).toContain('Inbox');
+    expect(menuItems[0].textContent).toContain('Game');
     expect(menuItems[1].textContent).toContain('Outbox');
   });
 
@@ -60,7 +60,7 @@ describe('AppComponent', () => {
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-item');
     expect(menuItems.length).toEqual(12);
-    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/folder/Inbox');
+    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/folder/Game');
     expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual('/folder/Outbox');
   });
 
