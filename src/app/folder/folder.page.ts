@@ -41,8 +41,8 @@ export class FolderPage implements OnInit {
     // }
     if (this.folder == "Game")
       this.game = new Phaser.Game({
-        width: 800, 
-        height: 600, 
+        width: window.innerWidth, 
+        height: window.innerHeight, 
         renderer: Phaser.CANVAS, 
         parent: 'phaser-example', 
         state: { preload: this.preload, 
