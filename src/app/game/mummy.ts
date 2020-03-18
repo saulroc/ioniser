@@ -5,7 +5,9 @@ export class Mummy extends Phaser.Sprite {
 
     public anim: Phaser.Animation;
 
-    constructor (game: Phaser.Game, x: number, y: number) {
+    constructor (game: Phaser.Game) {
+        var x = 0;
+        var y = (Math.random() * game.height);
         super(game, x, y, 'mummy', 5);
  
         this.anchor.setTo(0.5, 0.5);
@@ -16,7 +18,6 @@ export class Mummy extends Phaser.Sprite {
         //this.scale.set(4);
         this.smoothed = false;
         this.anim = this.animations.add('walk');
-        this.position.y = (Math.random() * game.height);
         this.body.velocity.x = ((100 * Math.random() ) + 50) * (Math.random() < 0.5 ? -1 : 1);
         if (this.body.velocity.x < 0) {
             this.position.x = game.width;
