@@ -44,7 +44,7 @@ export class FolderPage implements OnInit {
     // } else if (this.game != null) {
     //   this.game.paused = true;
     // }
-    if (this.folder == "Game")
+    if (this.folder == "Game") {
       this.game = new Phaser.Game({
         width: window.innerWidth, 
         height: window.innerHeight, 
@@ -55,6 +55,7 @@ export class FolderPage implements OnInit {
           update: this.update },*/
         transparent: false,
         antialias: false,
+        resolution: window.devicePixelRatio,
         physicsConfig: Phaser.Physics.ARCADE
         });
 
@@ -64,6 +65,7 @@ export class FolderPage implements OnInit {
         this.game.state.add('Preload', PreLoad, false);
 
         this.game.state.start('Preload');
+    }      
 
   }
 

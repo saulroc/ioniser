@@ -6,24 +6,33 @@ export class Main extends Phaser.State {
     back : Phaser.Image;
     mummies : Phaser.Group;
     scoreText : Phaser.Text;
-    score: number;
-    private numberMummies: number = 10;
+    score: number = 0;
+    private numberMummies: number;
     timeGameMiliseconds: number;
     timeGameText: Phaser.Text;
     timeGameTimer: Phaser.TimerEvent;
+    level: number = 0;
+
+    init(resetearLevel: boolean) {
+        if (resetearLevel) {
+            this.level = 0;
+            this.score = 0;
+        }
+    }
 
     create() {
-        this.back = this.game.add.image(0, -400, 'lazur');
-        this.back.scale.set(2);
-        this.back.smoothed = false;
-    
+        this.back = this.game.add.image(0, 0, 'lazur');
+        this.back.scale.setTo(this.game.width/this.back.width * this.game.resolution,this.game.height/this.back.height * this.game.resolution);        
+        //this.back.smoothed = false;
+        this.level++;
+        this.numberMummies = this.level * 5;
         var style = {
             font: 'bold 28pt Arial',
             fill: '#FFFFFF',
             align: 'center'
         }
-        this.score = 0;
-        var message = this.score.toString().padStart(5,"0");
+
+        var message = "Level " + this.level.toString().padStart(3,"0");
         this.scoreText = this.add.text(this.game.world.centerX, this.game.height / 12, message, style);
         this.scoreText.anchor.set(0.5);
 
@@ -33,7 +42,7 @@ export class Main extends Phaser.State {
           this.mummies.add(mummy);
         }
         
-        this.timeGameMiliseconds = 0;
+        this.timeGameMiliseconds = this.numberMummies * 10;
         message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
         message += ":" + Math.floor(this.timeGameMiliseconds % 600 / 10).toString().padStart(2,"0");
         message += "." + ((this.timeGameMiliseconds % 600) % 10).toString()
@@ -46,17 +55,22 @@ export class Main extends Phaser.State {
     }
 
     updateTimer() {
-        this.timeGameMiliseconds+= 1;
+        this.timeGameMiliseconds-= 1;
         var message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
         message += ":" + Math.floor(this.timeGameMiliseconds % 600 / 10).toString().padStart(2,"0");
         message += "." + ((this.timeGameMiliseconds % 600) % 10).toString()
         this.timeGameText.text = message;
+        if (this.timeGameMiliseconds <= 0) {
+            this.timeGameTimer.timer.stop();
+            //TODO: stop mummies
+            this.game.state.start('GameOver',false, false, 'Game Over!', false);
+        }
     }
 
     update () {
         var alive = this.mummies.getFirstAlive(false);
         if (alive == null) {
-            this.game.state.start('GameOver', false, false, ['Congratulations!']);
+            this.game.state.start('GameOver', false, false, ['Congratulations!'], true);
             this.timeGameTimer.timer.stop();
         }
         
