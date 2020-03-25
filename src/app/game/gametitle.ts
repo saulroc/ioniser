@@ -1,9 +1,17 @@
 import * as Phaser from 'phaser-ce';
+import { FirebaseService } from '../services/firebase.service';
 
 export class GameTitle extends Phaser.State {
     
     title : Phaser.Text;
     startLabel : Phaser.Text;
+    private firebaseService: FirebaseService;
+    private playerName: string = 'Player 1';
+
+    init(fs: FirebaseService, pn: string) {
+        this.firebaseService = fs;
+        this.playerName = pn;
+    }
 
     create() {
         this.game.stage.backgroundColor = '#000000';
@@ -14,7 +22,7 @@ export class GameTitle extends Phaser.State {
             wordWrap: true, 
             wordWrapWidth: this.game.width / 4 * 3
         }
-        var message = "Mummies hunter"
+        var message = "Mummies hunter " + this.playerName;
         this.title = this.add.text(this.game.world.centerX, this.game.world.centerY / 2, message, style);
         this.title.anchor.set(0.5);
 
@@ -27,10 +35,7 @@ export class GameTitle extends Phaser.State {
     }
 
     startGame() {
-        this.game.state.start('Main', true);
+        this.game.state.start('Main', true, false, true, this.firebaseService, this.playerName);
     }
 
-    update () {
-        
-    }
 }

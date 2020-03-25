@@ -39,10 +39,10 @@ export class Mummy extends Phaser.Sprite {
     update() {
         if (this.body.velocity.x > 0 && this.position.x > this.game.width) {
             this.position.x = 0
-            this.position.y = (Math.random() * (this.game.height - this.height));
+            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
         } else if (this.body.velocity.x < 0 && this.position.x < 0) {
             this.position.x = this.game.width;
-            this.position.y = (Math.random() * (this.game.height - this.height));
+            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
         }
             
     }

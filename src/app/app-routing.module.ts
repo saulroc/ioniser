@@ -8,8 +8,16 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
+    path: 'folder/:id/:username',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+  },
+  {
+    path: 'contact/:username',
+    loadChildren: () => import('./contact/contact.module').then( m => m.ContactPageModule)
+  },
+  {
+    path: 'high-score/:username',
+    loadChildren: () => import('./high-score/high-score.module').then( m => m.HighScorePageModule)
   }
 ];
 

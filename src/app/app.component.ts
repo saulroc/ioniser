@@ -18,12 +18,18 @@ export class AppComponent implements OnInit {
       icon: 'game-controller'
     },
     {
-      title: 'Outbox',
-      url: '/folder/Outbox',
-      icon: 'paper-plane'
+      title: 'High Scores',
+      url: '/high-score',
+      icon: 'podium'
+    },
+    {
+      title: 'Contact',
+      url: '/contact',
+      icon: 'mail'
     }
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  userName: String = "prueba";
 
   constructor(
     private platform: Platform,
@@ -46,9 +52,5 @@ export class AppComponent implements OnInit {
       this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
     }
   }
-
-click() {
-  console.log("Button was clicked.");
-}
 
 }

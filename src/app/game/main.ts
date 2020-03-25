@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce';
 import { Mummy } from '../game/mummy';
+import { FirebaseService } from '../services/firebase.service';
 
 export class Main extends Phaser.State {
     
@@ -12,12 +13,18 @@ export class Main extends Phaser.State {
     timeGameText: Phaser.Text;
     timeGameTimer: Phaser.TimerEvent;
     level: number = 0;
+    private firebaseService: FirebaseService;
+    private playerName: string;
 
-    init(resetearLevel: boolean) {
+    init(resetearLevel: boolean, fs: FirebaseService, pn:string) {
         if (resetearLevel) {
             this.level = 0;
             this.score = 0;
         }
+        if (fs)
+            this.firebaseService = fs;
+        if (pn)
+            this.playerName = pn;
     }
 
     create() {
@@ -27,18 +34,19 @@ export class Main extends Phaser.State {
         this.level++;
         this.numberMummies = this.level * 5;
         var style = {
-            font: 'bold 28pt Arial',
+            font: 'bold 16pt Arial',
             fill: '#FFFFFF',
             align: 'center'
         }
 
-        var message = "Level " + this.level.toString().padStart(3,"0");
+        var message = "Level " + this.level.toString().padStart(3,"0") + " " + this.score.toString().padStart(3, "0") + " mummies hunted";
         this.scoreText = this.add.text(this.game.world.centerX, this.game.height / 12, message, style);
         this.scoreText.anchor.set(0.5);
 
         this.mummies = this.game.add.group();
         for (var i = 0; i < this.numberMummies; i++) {
           var mummy = new Mummy(this.game);
+          mummy.events.onDestroy.add(this.updateScore, this);
           this.mummies.add(mummy);
         }
         
@@ -54,6 +62,14 @@ export class Main extends Phaser.State {
         this.timeGameTimer.timer.start()
     }
 
+    updateScore() {
+        if(this.timeGameTimer.timer.running) {
+            this.score++;
+            var message = "Level " + this.level.toString().padStart(3,"0") + " - " + this.score.toString().padStart(3, "0") + " mummies hunted";
+            this.scoreText.text = message;
+        }        
+    }
+
     updateTimer() {
         this.timeGameMiliseconds-= 1;
         var message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
@@ -63,6 +79,9 @@ export class Main extends Phaser.State {
         if (this.timeGameMiliseconds <= 0) {
             this.timeGameTimer.timer.stop();
             //TODO: stop mummies
+            
+            var value = {username: this.playerName, score: this.score};
+            this.firebaseService.createScore(value);
             this.game.state.start('GameOver',false, false, 'Game Over!', false);
         }
     }
