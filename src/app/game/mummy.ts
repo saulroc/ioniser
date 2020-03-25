@@ -1,4 +1,6 @@
 
+import {Explosion} from '../game/explosion';
+
 import * as Phaser from 'phaser-ce';
 
 export class Mummy extends Phaser.Sprite {
@@ -33,6 +35,7 @@ export class Mummy extends Phaser.Sprite {
 
     hitMummy() {
         this.body.velocity.x = 0;
+        var explosion = new Explosion(this.game,this.x,this.y);
         this.destroy();
     }
 

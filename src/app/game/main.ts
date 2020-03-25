@@ -47,7 +47,7 @@ export class Main extends Phaser.State {
         for (var i = 0; i < this.numberMummies; i++) {
           var mummy = new Mummy(this.game);
           mummy.events.onDestroy.add(this.updateScore, this);
-          this.mummies.add(mummy);
+          this.mummies.add(mummy);          
         }
         
         this.timeGameMiliseconds = this.numberMummies * 10;
