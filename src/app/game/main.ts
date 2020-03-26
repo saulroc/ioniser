@@ -15,6 +15,7 @@ export class Main extends Phaser.State {
     level: number = 0;
     private firebaseService: FirebaseService;
     private playerName: string;
+    private musicSound: Phaser.Sound;
 
     init(resetearLevel: boolean, fs: FirebaseService, pn:string) {
         if (resetearLevel) {
@@ -60,6 +61,14 @@ export class Main extends Phaser.State {
         this.timeGameTimer = this.time.events.add(100, this.updateTimer,this);
         this.timeGameTimer.loop = true;
         this.timeGameTimer.timer.start()
+
+        if (! this.musicSound) {
+            this.musicSound = this.game.sound.add('music_loop', 1, true, true);
+        }
+        if (! this.musicSound.isPlaying)
+            this.musicSound.play('',0, 1);
+        this.musicSound.volume = 1;
+        //this.musicSound.
     }
 
     updateScore() {
@@ -79,7 +88,7 @@ export class Main extends Phaser.State {
         if (this.timeGameMiliseconds <= 0) {
             this.timeGameTimer.timer.stop();
             //TODO: stop mummies
-            
+            this.musicSound.volume = 0.1;
             var value = {username: this.playerName, score: this.score};
             this.firebaseService.createScore(value);
             this.game.state.start('GameOver',false, false, 'Game Over!', false);
@@ -91,6 +100,8 @@ export class Main extends Phaser.State {
         if (alive == null) {
             this.game.state.start('GameOver', false, false, ['Congratulations!'], true);
             this.timeGameTimer.timer.stop();
+            this.musicSound.volume = 0.1;
+
         }
         
     }

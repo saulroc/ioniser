@@ -6,6 +6,7 @@ import * as Phaser from 'phaser-ce';
 export class Mummy extends Phaser.Sprite {
 
     public anim: Phaser.Animation;
+    private changeDirection: number;
 
     constructor (game: Phaser.Game) {
         var x = 0;
@@ -31,6 +32,7 @@ export class Mummy extends Phaser.Sprite {
         this.anim.play(10, true);
 
         this.events.onInputDown.add(this.hitMummy, this);
+        this.asignChangeDirection();
     }
 
     hitMummy() {
@@ -39,7 +41,19 @@ export class Mummy extends Phaser.Sprite {
         this.destroy();
     }
 
+    asignChangeDirection() {
+        this.changeDirection = (Math.random() * this.game.width) + 50;
+    }
+    
     update() {
+        if(this.changeDirection > 0)
+            this.changeDirection--;
+        else {
+            this.asignChangeDirection();            
+            this.body.velocity.x *= -1;
+            this.scale.setTo(this.scale.x * -1, this.scale.y); 
+        }
+
         if (this.body.velocity.x > 0 && this.position.x > this.game.width) {
             this.position.x = 0
             this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;

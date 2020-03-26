@@ -8,6 +8,8 @@
           <ion-item> 
             <ion-label stacked>UserName: </ion-label>
             <ion-input type="text" [(ngModel)]="userName" text-right id="input" ></ion-input>
+            <button (click)="login()">Login</button>
+            <button (click)="logout()">Logout</button>
           </ion-item>  
           
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
