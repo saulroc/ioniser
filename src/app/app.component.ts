@@ -54,6 +54,14 @@ export class AppComponent implements OnInit {
     if (path !== undefined) {
       this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
     }
+    this.afa.authState.subscribe(user => {
+        if (!user) {
+          this.userName = "Player 1";
+          return
+        }
+
+        this.userName = user.displayName;
+    });
   }
 
   login() {
@@ -66,9 +74,7 @@ export class AppComponent implements OnInit {
       
       //var token = result.user.getIdToken;
       var user = result.user;
-      console.log(user);
-      this.userName = user.displayName;
-      console.log(this.userName);
+      
       // ...
     }).catch(function(error) {
       // Handle Errors here.
