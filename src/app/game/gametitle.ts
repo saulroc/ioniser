@@ -28,7 +28,7 @@ export class GameTitle extends Phaser.State {
 
         message = "click here to start game!";
         style.font = '26pt Arial';
-        this.startLabel = this.add.text(this.game.world.centerX, this.game.world.centerY + this.title.height * 1.5, message, style);
+        this.startLabel = this.add.text(this.game.world.centerX, this.game.world.centerY + this.title.height, message, style);
         this.startLabel.anchor.set(0.5);
         this.startLabel.inputEnabled = true;
         this.startLabel.events.onInputDown.add(this.startGame, this);

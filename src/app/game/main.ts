@@ -33,7 +33,7 @@ export class Main extends Phaser.State {
         this.back.scale.setTo(this.game.width/this.back.width * this.game.resolution,this.game.height/this.back.height * this.game.resolution);        
         //this.back.smoothed = false;
         this.level++;
-        this.numberMummies = this.level * 5;
+        this.numberMummies = (this.level * 2) + 3
         var style = {
             font: 'bold 16pt Arial',
             fill: '#FFFFFF',
@@ -51,11 +51,11 @@ export class Main extends Phaser.State {
           this.mummies.add(mummy);          
         }
         
-        this.timeGameMiliseconds = this.numberMummies * 10;
+        this.timeGameMiliseconds = (this.numberMummies * 20) - this.level * 2;
         message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
         message += ":" + Math.floor(this.timeGameMiliseconds % 600 / 10).toString().padStart(2,"0");
         message += "." + ((this.timeGameMiliseconds % 600) % 10).toString()
-        this.timeGameText = this.add.text(this.game.width / 12, this.game.height / 12, message, style);
+        this.timeGameText = this.add.text(this.game.world.centerX, this.game.height / 12 + this.scoreText.height, message, style);
         this.timeGameText.anchor.set(0.5);
 
         this.timeGameTimer = this.time.events.add(100, this.updateTimer,this);

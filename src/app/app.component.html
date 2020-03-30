@@ -4,16 +4,21 @@
       <ion-content>
         <ion-list id="game-list">
           <ion-list-header>Mummies Hunter</ion-list-header>
-          <ion-note>saulroc@hotmail.com</ion-note>
-          <ion-item> 
-            <ion-label stacked>UserName: </ion-label>
-            <ion-input type="text" [(ngModel)]="userName" text-right id="input" ></ion-input>
-            <button (click)="login()">Login</button>
-            <button (click)="logout()">Logout</button>
+          <ion-item>             
+            <ion-avatar *ngIf="urlFoto" slot="start">
+              <img src={{urlFoto}}>
+            </ion-avatar>              
+            <ion-label stacked>Player Name: </ion-label>
+            <ion-input type="text" [(ngModel)]="userName" text-right id="input" ></ion-input>            
           </ion-item>  
           
+          
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url, userName]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+            <ion-item *ngIf="p.title=='Game'" (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url, userName]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="p.title!='Game'" (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
               <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>

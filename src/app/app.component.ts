@@ -3,8 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth'
-import * as firebase from 'firebase';
+import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,11 @@ import * as firebase from 'firebase';
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
+    {
+      title: 'Login',
+      url: '/login',
+      icon: 'log-in'
+    },
     {
       title: 'Game',
       url: '/folder/Game',
@@ -32,6 +39,7 @@ export class AppComponent implements OnInit {
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
   public userName: String = "Player 1";
+  public urlFoto: string = "";
 
   constructor(
     private platform: Platform,
@@ -51,49 +59,22 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const path = window.location.pathname.split('folder/')[1];
+    
     if (path !== undefined) {
-      this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
+      this.selectedIndex = this.appPages.findIndex(page => path.toLowerCase().startsWith(page.title.toLowerCase()));
     }
     this.afa.authState.subscribe(user => {
         if (!user) {
           this.userName = "Player 1";
+          this.urlFoto = "";
           return
         }
 
-        this.userName = user.displayName;
+        this.userName = user.displayName ? user.displayName : user.email.split('@')[0];
+        this.urlFoto = user.photoURL;
     });
   }
 
-  login() {
-    var provider = new firebase.auth.FacebookAuthProvider();
-    provider.setCustomParameters({
-      'display': 'popup'
-    });
-    //this.afa.auth.signInWithPopup(firebase.auth.FacebookAuthProvider)
-    this.afa.auth.signInWithPopup(provider).then(function(result) {
-      
-      //var token = result.user.getIdToken;
-      var user = result.user;
-      
-      // ...
-    }).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
-  }
-
-  logout() {
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful.
-    }).catch(function(error) {
-      // An error happened.
-    });
-  }
+  
 
 }
