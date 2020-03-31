@@ -10,8 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'folder/:id/:username',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
-    canActivate: [AuthGuardService]
+    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
   },
   {
     path: 'contact',

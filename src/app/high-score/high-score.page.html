@@ -13,9 +13,18 @@
       <ion-title size="large">High Scores</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Player Name</ion-label>
+      <ion-label>Score</ion-label>
+      <ion-label>Date</ion-label>
+    </ion-list-header>
   <ion-item  *ngFor="let highScore of highScores | async">
-    <h1>{{ highScore.username }} - {{ highScore.score }} mummies hunted {{ highScore.datetime ? '- ' + highScore.datetime.toDate().toLocaleString('es-SP') : '' }} </h1>
+    <ion-label>{{ highScore.username }}</ion-label>
+    <ion-label>{{ highScore.score }} mummies hunted</ion-label>
+    <ion-label>{{ highScore.datetime ? highScore.datetime.toDate().toLocaleString('es-SP') : '' }}</ion-label>
     <p></p>
   </ion-item>
+  </ion-list>
 </ion-content>
 
