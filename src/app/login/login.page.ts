@@ -14,6 +14,7 @@ export class LoginPage implements OnInit {
   userName: string;
   password: string;
   urlFoto: string;
+  isAuthenticated: boolean;
 
   constructor(private router: Router,
     private afa: AngularFireAuth,
@@ -26,9 +27,10 @@ export class LoginPage implements OnInit {
       if (!user) {
         this.userName = "Player 1";
         this.urlFoto = "";
+        this.isAuthenticated = false;
         return
       }
-
+      this.isAuthenticated = true;
       this.userName = user.displayName ? user.displayName : user.email;
       this.urlFoto = user.photoURL;
   });
