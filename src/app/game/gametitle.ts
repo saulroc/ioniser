@@ -34,6 +34,9 @@ export class GameTitle extends Phaser.State {
         //this.startLabel.events.onInputDown.add(this.startGame, this);
         this.game.input.onTap.add(this.startGame,this);
         
+        // var pow = this.game.add.sprite(50, 50, 'POW running');
+        // var animation = pow.animations.add('running');
+        // animation.play(10,true);
     }
 
     startGame() {
