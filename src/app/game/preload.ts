@@ -18,7 +18,7 @@ export class PreLoad extends Phaser.State {
         //this.game.load.spritesheet('explosion', 'assets/explosion_HD.png', 84, 84, 21);
         this.game.load.spritesheet('explosion', 'assets/Explosion.png', 33, 45, 24);
         this.game.load.audio('music_loop', 'assets/06 - Another Part Of Me.mp3');
-        this.game.load.spritesheet('POW running', 'assets/Pow metal slug running.png', 56, 45, 8);
+        this.game.load.spritesheet('POW', 'assets/POW metal Slug.png', 56, 45, 26);
     }
     create() {
        

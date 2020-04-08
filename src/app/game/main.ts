@@ -1,11 +1,13 @@
 import * as Phaser from 'phaser-ce';
 import { Mummy } from '../game/mummy';
+import { PrisonerOfWar } from '../game/prisonerOfWar';
 import { FirebaseService } from '../services/firebase.service';
 
 export class Main extends Phaser.State {
     
     back : Phaser.Image;
     mummies : Phaser.Group;
+    POWS: Phaser.Group;
     scoreText : Phaser.Text;
     score: number = 0;
     private numberMummies: number;
@@ -46,13 +48,19 @@ export class Main extends Phaser.State {
         this.scoreText = this.add.text(this.game.world.centerX, this.game.height / 12, message, style);
         this.scoreText.anchor.set(0.5);
 
-        this.mummies = this.game.add.group();
+        this.mummies = this.game.add.physicsGroup();
         for (var i = 0; i < this.numberMummies; i++) {
           var mummy = new Mummy(this.game);
           mummy.events.onDestroy.add(this.updateScore, this);
           this.mummies.add(mummy);          
         }
-        
+        this.POWS = this.game.add.physicsGroup();
+        for (var i = 0; i <= Math.floor(this.level / 5); i++) {
+            var pow = new PrisonerOfWar(this.game);
+            //pow.events.onDestroy.add(this.gameOver, this);
+            this.POWS.add(pow);          
+        }  
+
         message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
         message += ":" + Math.floor(this.timeGameMiliseconds % 600 / 10).toString().padStart(2,"0");
         message += "." + ((this.timeGameMiliseconds % 600) % 10).toString()
@@ -69,7 +77,13 @@ export class Main extends Phaser.State {
         if (! this.musicSound.isPlaying)
             this.musicSound.play('',0, 1);
         this.musicSound.volume = 1;
-        //this.musicSound.
+        
+        this.physics.arcade.overlap(this.mummies, this.POWS, this.POWHunted, null, this);
+    }
+
+    POWHunted (mummy, pow) {
+        pow.destroy();
+        this.gameOver();
     }
 
     updateScore() {
@@ -80,6 +94,17 @@ export class Main extends Phaser.State {
         }        
     }
 
+    gameOver() {
+        this.timeGameTimer.timer.stop();
+        //TODO: stop mummies
+        this.musicSound.volume = 0.1;
+        this.mummies.forEachAlive(function(mummy) { mummy.body.velocity.x = 0; });
+        this.POWS.forEachAlive(function(pow) { pow.body.velocity.x = 0; });
+        var value = {username: this.playerName, score: this.score};
+        this.firebaseService.createScore(value);
+        this.game.state.start('GameOver',false, false, 'Game Over!', false);
+    }
+
     updateTimer() {
         this.timeGameMiliseconds-= 1;
         var message = Math.floor(this.timeGameMiliseconds/600).toString().padStart(2,"0") 
@@ -87,19 +112,15 @@ export class Main extends Phaser.State {
         message += "." + ((this.timeGameMiliseconds % 600) % 10).toString()
         this.timeGameText.text = message;
         if (this.timeGameMiliseconds <= 0) {
-            this.timeGameTimer.timer.stop();
-            //TODO: stop mummies
-            this.musicSound.volume = 0.1;
-            var value = {username: this.playerName, score: this.score};
-            this.firebaseService.createScore(value);
-            this.game.state.start('GameOver',false, false, 'Game Over!', false);
+            this.gameOver();
         }
     }
 
     update () {
         var alive = this.mummies.getFirstAlive(false);
-        if (alive == null) {
-            this.game.state.start('GameOver', false, false, ['Congratulations!'], true);
+        var trapped = this.POWS.getFirst("isTrapped", true);
+        if (alive == null && trapped == null) {
+            this.game.state.start('GameOver', false, false, 'Congratulations!', true);
             this.timeGameTimer.timer.stop();
             this.musicSound.volume = 0.1;
 
