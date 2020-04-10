@@ -44,7 +44,7 @@ export class GameTitle extends Phaser.State {
         this.instructionsLabel = this.add.text(this.game.world.centerX, this.startLabel.y + 2 * this.startLabel.height, "Hello " + this.playerName + "! click here to read the game instructions", style);
         this.instructionsLabel.anchor.set(0.5);
         this.instructionsLabel.inputEnabled = true;
-        this.instructionsLabel.events.onInputDown.add(this.showInstructions);
+        this.instructionsLabel.events.onInputDown.add(this.showInstructions, this);
 
         //this.game.input.onTap.add(this.startGame,this);
         
@@ -58,6 +58,15 @@ export class GameTitle extends Phaser.State {
         });
     }
 
+    resetDemoScreen() {
+        console.log("Complete!");
+        if(this.pow)
+            this.pow.destroy();
+        if(this.mummy)
+            this.mummy.destroy();
+        this.showInstructions();
+    }
+
     showInstructions() {
         this.page++;
         switch (this.page) {
@@ -66,11 +75,7 @@ export class GameTitle extends Phaser.State {
                 this.pow = new PrisonerOfWar(this.game);
                 this.pow.position.x = this.game.world.centerX;
                 this.pow.position.y = this.game.world.centerY;
-                this.pow.animEscape.onComplete.add(function() {
-                    console.log("Complete!");
-                    this.pow.destroy();
-                    this.showInstructions();
-                }, this);
+                this.pow.animEscape.onComplete.add(this.resetDemoScreen, this, 1);
                 break;
             case 2:
                 this.writeInstructions("Drag and drop the POW to save him from the mummies!");
@@ -78,19 +83,14 @@ export class GameTitle extends Phaser.State {
                 this.pow.position.x = this.game.world.centerX;
                 this.pow.position.y = this.game.world.centerY;
                 this.pow.freeOnTap();
-                this.pow.animFlying.onComplete.add(function() {
-                    this.pow.destroy();
-                    this.showInstructions();
-                })
+                this.pow.animFlying.onComplete.add(this.resetDemoScreen, this, 1);
                 break;
             case 3:
                 this.writeInstructions("Tap on the mummies to kill them!");
                 this.mummy = new Mummy(this.game);
                 this.mummy.position.x = this.game.world.centerX;
                 this.mummy.position.y = this.game.world.centerY;
-                this.mummy.events.onDestroy.add(function() {
-                    this.showInstructions();
-                })
+                this.mummy.events.onDestroy.add(this.resetDemoScreen,this, 1);
                 break;
             default:
                 this.writeInstructions("Click on the screen to start game!");    
