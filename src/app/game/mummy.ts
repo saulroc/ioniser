@@ -10,14 +10,15 @@ export class Mummy extends Phaser.Sprite {
 
     constructor (game: Phaser.Game) {
         var x = 0;
-        var y = (Math.random() * (game.height - (45*game.resolution)));
+        var y = 0;
         super(game, x, y, 'mummy', 5);
- 
+        
         this.anchor.setTo(0.5, 0.5);
+        this.position.y = this.asignY();
         game.physics.enable(this);
         game.add.existing(this);
         this.inputEnabled = true;
-
+        this.body.enable = true;
         //this.scale.set(4);
         this.smoothed = false;
         this.anim = this.animations.add('walk');
@@ -33,6 +34,10 @@ export class Mummy extends Phaser.Sprite {
 
         this.events.onInputDown.add(this.hitMummy, this);
         this.asignChangeDirection();
+    }
+
+    asignY() {
+        return this.game.height / 2 + (Math.random() * (this.game.height / 2 - (this.height * this.game.resolution)));
     }
 
     hitMummy() {
@@ -56,10 +61,10 @@ export class Mummy extends Phaser.Sprite {
 
         if (this.body.velocity.x > 0 && this.position.x > this.game.width) {
             this.position.x = 0
-            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
+            this.position.y = this.asignY();
         } else if (this.body.velocity.x < 0 && this.position.x < 0) {
             this.position.x = this.game.width;
-            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
+            this.position.y = this.asignY();
         }
             
     }

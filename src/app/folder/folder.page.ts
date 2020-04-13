@@ -46,7 +46,7 @@ export class FolderPage implements OnInit {
           transparent: false,
           antialias: false,
           resolution: window.devicePixelRatio,
-          physicsConfig: Phaser.Physics.ARCADE
+          physicsConfig: Phaser.Physics.ARCADE          
           });
           this.game.state.add('GameOver', GameOver, false);
           this.game.state.add('Main', Main, false);

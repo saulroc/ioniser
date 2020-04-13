@@ -31,7 +31,8 @@ export class Main extends Phaser.State {
     }
 
     create() {
-        this.back = this.game.add.image(0, 0, 'lazur');
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.back = this.game.add.image(0, 0, 'background');
         this.back.scale.setTo(this.game.width/this.back.width * this.game.resolution,this.game.height/this.back.height * this.game.resolution);        
         //this.back.smoothed = false;
         this.level++;
@@ -72,16 +73,18 @@ export class Main extends Phaser.State {
         this.timeGameTimer.timer.start()
 
         if (! this.musicSound) {
-            this.musicSound = this.game.sound.add('music_loop', 1, true, true);
+            this.musicSound = this.game.sound.add('music_loop', 1, true, false);
         }
         if (! this.musicSound.isPlaying)
             this.musicSound.play('',0, 1);
         this.musicSound.volume = 1;
         
-        this.physics.arcade.overlap(this.mummies, this.POWS, this.POWHunted, null, this);
+        this.mummies.enableBody = true;
+        this.mummies.physicsBodyType = Phaser.Physics.ARCADE;
     }
 
     POWHunted (mummy, pow) {
+        // console.log("POW hunted!", pow.getBounds(), mummy.getBounds());
         pow.destroy();
         this.gameOver();
     }
@@ -117,6 +120,9 @@ export class Main extends Phaser.State {
     }
 
     update () {
+        
+        this.physics.arcade.overlap(this.mummies, this.POWS, this.POWHunted, null, this);
+
         var alive = this.mummies.getFirstAlive(false);
         var trapped = this.POWS.getFirst("isTrapped", true);
         if (alive == null && trapped == null) {
@@ -127,4 +133,15 @@ export class Main extends Phaser.State {
         }
         
     }
+
+    // render() {
+    //     this.mummies.forEach(mummy => {
+    //         this.game.debug.spriteBounds(mummy);
+    //     });
+
+    //     this.POWS.forEach(pow => {
+    //         this.game.debug.spriteBounds(pow);
+    //     });
+        
+    // }
 }
