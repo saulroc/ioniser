@@ -108,4 +108,14 @@ export class GameTitle extends Phaser.State {
         this.game.state.start('Main', true, false, true, this.firebaseService, this.playerName);
     }
 
+// render() {
+//     if(this.pow) {
+//         this.game.debug.spriteInfo(this.pow, 10, 10, 'red');
+//         this.game.debug.spriteBounds(this.pow);
+//     }
+//     if(this.mummy)
+//         this.game.debug.spriteBounds(this.mummy);
+
+// }
+
 }

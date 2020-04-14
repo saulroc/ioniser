@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce';
 import { Mummy } from '../game/mummy';
 import { PrisonerOfWar } from '../game/prisonerOfWar';
+import { Explosion} from '../game/explosion';
 import { FirebaseService } from '../services/firebase.service';
 
 export class Main extends Phaser.State {
@@ -85,6 +86,7 @@ export class Main extends Phaser.State {
 
     POWHunted (mummy, pow) {
         // console.log("POW hunted!", pow.getBounds(), mummy.getBounds());
+        var explosion = new Explosion(this.game,pow.x,pow.y);
         pow.destroy();
         this.gameOver();
     }
@@ -101,8 +103,8 @@ export class Main extends Phaser.State {
         this.timeGameTimer.timer.stop();
         //TODO: stop mummies
         this.musicSound.volume = 0.1;
-        this.mummies.forEachAlive(function(mummy) { mummy.body.velocity.x = 0; });
-        this.POWS.forEachAlive(function(pow) { pow.body.velocity.x = 0; });
+        this.mummies.forEachAlive(function(mummy) { mummy.body.stop(); });
+        this.POWS.forEachAlive(function(pow) { pow.body.stop(); });
         var value = {username: this.playerName, score: this.score};
         this.firebaseService.createScore(value);
         this.game.state.start('GameOver',false, false, 'Game Over!', false);
@@ -135,13 +137,13 @@ export class Main extends Phaser.State {
     }
 
     // render() {
-    //     this.mummies.forEach(mummy => {
-    //         this.game.debug.spriteBounds(mummy);
-    //     });
+    //     // this.mummies.forEach(mummy => {
+    //     //     this.game.debug.spriteBounds(mummy);
+    //     // });
 
-    //     this.POWS.forEach(pow => {
-    //         this.game.debug.spriteBounds(pow);
-    //     });
+    //     // this.POWS.forEach(pow => {
+    //     //     this.game.debug.spriteBounds(pow);
+    //     // });
         
     // }
 }

@@ -19,6 +19,8 @@ export class Mummy extends Phaser.Sprite {
         game.add.existing(this);
         this.inputEnabled = true;
         this.body.enable = true;
+        this.body.syncBounds = true;
+
         //this.scale.set(4);
         this.smoothed = false;
         this.anim = this.animations.add('walk');

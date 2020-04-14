@@ -17,11 +17,11 @@ export class PrisonerOfWar extends Phaser.Sprite {
         this.anchor.setTo(0.5, 0.5);
         this.position.y = this.asignY();
         game.physics.enable(this);
-        game.add.existing(this);
+        game.add.existing(this);        
         this.inputEnabled = true;
         this.isTrapped = true;
         this.body.enable = true;
-
+        
         //this.scale.set(4);
         this.smoothed = false;
         this.animRunning = this.animations.add('running', [18, 19, 20, 21, 22, 23, 24, 25]);
@@ -35,6 +35,10 @@ export class PrisonerOfWar extends Phaser.Sprite {
         this.events.onDragStop.add(this.dragStop, this);
 
         this.events.onInputDown.add(this.freeOnTap, this);
+
+        this.body.syncBounds = false;
+        this.body.setSize(Math.abs(this.width) * 0.65, this.height * 0.65, Math.abs(this.width) * 0.17, this.height * 0.17);
+
     }
 
     freeOnTap() {
@@ -73,9 +77,9 @@ export class PrisonerOfWar extends Phaser.Sprite {
     }
 
     asignChangeDirection() {
-        var distanciaX = this.game.width;
+        var distanciaX = this.game.width - this.width;
         if (this.body.velocity.x < 0) {            
-            distanciaX = this.position.x;
+            distanciaX = this.position.x - this.width / 2;
         } else {
             distanciaX = distanciaX - this.position.x;
         }
@@ -93,10 +97,10 @@ export class PrisonerOfWar extends Phaser.Sprite {
 
         if (this.body.velocity.x > 0 && this.position.x > this.game.width) {
             this.position.x = 0
-            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
+            this.position.y = this.asignY();
         } else if (this.body.velocity.x < 0 && this.position.x < 0) {
             this.position.x = this.game.width;
-            this.position.y = (Math.random() * (this.game.height - this.height / 2)) + this.height / 2;
+            this.position.y =  this.asignY();
         }
             
     }
